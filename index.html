@@ -1,123 +1,225 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ahmet Özgür Korkmaz | DevOps & SRE Engineer</title>
+    <title>AOK | DevOps Command Center</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        body { background-color: #0f172a; color: #f8fafc; }
-        .hero-gradient {
-            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
+        body { background-color: #0a0a0c; color: #00ff41; font-family: 'Fira Code', monospace; overflow-x: hidden; }
+        .dashboard-grid { display: grid; grid-template-columns: 280px 1fr 300px; grid-template-rows: 60px 1fr 100px; height: 100vh; gap: 10px; padding: 10px; }
+        .glass-panel { background: rgba(20, 20, 25, 0.8); border: 1px solid #1a1a20; border-radius: 4px; position: relative; overflow: hidden; }
+        .panel-header { background: #1a1a20; padding: 5px 15px; font-size: 0.75rem; color: #888; display: flex; justify-content: space-between; border-bottom: 1px solid #333; }
+        .nav-item { cursor: pointer; transition: all 0.2s; padding: 5px 10px; border-radius: 3px; }
+        .nav-item:hover { background: rgba(0, 255, 65, 0.1); color: white; }
+        .nav-item.active { background: rgba(0, 255, 65, 0.2); color: white; border-left: 3px solid #00ff41; }
+        .hidden-lang { display: none !important; }
+        .tech-tag { border: 1px solid rgba(0, 255, 65, 0.3); padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; background: rgba(0, 255, 65, 0.05); color: #e2e8f0; transition: all 0.2s; cursor: default; }
+        .tech-tag:hover { background: rgba(0, 255, 65, 0.2); border-color: #00ff41; }
+        
+        /* Glitch Effect */
+        .project-card:hover .glitch-effect {
+            animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+            color: #fff;
         }
-        .card-hover:hover {
-            transform: translateY(-5px);
-            transition: all 0.3s ease;
-            border-color: #38bdf8;
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
         }
+
+        /* Typewriter Effect Cursor */
+        .typewriter-cursor { border-right: 2px solid #00ff41; animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { border-color: transparent; } }
+
+        /* Tux Penguin Animation */
+        .tux-container { position: absolute; bottom: 10px; left: 10px; z-index: 10; transition: all 0.3s; }
+        .tux-container:hover { transform: scale(1.1) rotate(5deg); }
+        .tux-tooltip { opacity: 0; transition: opacity 0.3s; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); padding: 5px; border-radius: 4px; font-size: 0.7rem; white-space: nowrap; pointer-events: none; border: 1px solid #00ff41; }
+        .tux-container:hover .tux-tooltip { opacity: 1; }
+
+        @media (max-width: 1024px) { .dashboard-grid { display: flex; flex-direction: column; height: auto; } }
     </style>
 </head>
-<body class="font-sans">
+<body>
 
-    <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto">
-        <div class="text-2xl font-bold text-sky-400">AOK<span class="text-white">.dev</span></div>
-        <div class="space-x-6">
-            <a href="#projects" class="hover:text-sky-400">Projeler</a>
-            <a href="#skills" class="hover:text-sky-400">Yetenekler</a>
-            <a href="mailto:info@ahmetozgurkorkmaz.com" class="bg-sky-600 px-4 py-2 rounded-lg hover:bg-sky-500 transition">İletişim</a>
+<audio id="beep-sound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+
+<div class="dashboard-grid">
+    <header class="glass-panel col-span-3 flex items-center justify-between px-6">
+        <div class="flex items-center space-x-4">
+            <span class="text-white font-bold tracking-tighter">AOK_CORE_v3.0</span>
+            <span class="text-xs bg-green-900/30 text-green-500 px-2 py-0.5 rounded border border-green-500/50 uppercase flex items-center">
+                <i class="fab fa-linux mr-2 text-lg"></i>
+                <span class="lang-en">System: Active</span><span class="lang-tr hidden-lang">Sistem: Aktif</span>
+            </span>
         </div>
-    </nav>
-
-    <header class="hero-gradient py-20 px-6 text-center">
-        <h1 class="text-5xl md:text-7xl font-extrabold mb-4">Ahmet Özgür Korkmaz</h1>
-        <p class="text-xl text-slate-400 mb-8 max-w-2xl mx-auto">
-            Bilgisayar Mühendisi | <span class="text-sky-400">DevOps & SRE Enthusiast</span> <br>
-            Sistemleri ölçeklendiriyor, otomatize ediyor ve gözlemliyorum.
-        </p>
-        <div class="flex justify-center space-x-4">
-            <a href="https://github.com/aosgur" class="text-3xl hover:text-sky-400"><i class="fab fa-github"></i></a>
-            <a href="#" class="text-3xl hover:text-sky-400"><i class="fab fa-linkedin"></i></a>
+        <div class="flex items-center space-x-6 text-xs text-white">
+            <div><i class="fas fa-microchip mr-2"></i>CPU: <span id="cpu-load">12%</span></div>
+            <button onclick="toggleLang()" class="bg-green-500/10 border border-green-500/50 px-4 py-1 hover:bg-green-500/20 rounded transition font-bold">
+                <span class="lang-en">TR</span><span class="lang-tr hidden-lang">EN</span>
+            </button>
         </div>
     </header>
 
-    <section id="projects" class="max-w-6xl mx-auto py-20 px-6">
-        <h2 class="text-3xl font-bold mb-12 border-b-2 border-sky-500 inline-block">Öne Çıkan Projeler</h2>
+    <aside class="glass-panel flex flex-col">
+        <div class="panel-header">
+            <span><span class="lang-en">EXPLORER</span><span class="lang-tr hidden-lang">GEZGİN</span></span>
+            <i class="fas fa-folder-open"></i>
+        </div>
+        <div class="p-4 space-y-2 text-sm flex-grow">
+            <div onclick="showContent('bio')" class="nav-item active" id="nav-bio"><i class="fas fa-user-circle mr-2"></i>bio.md</div>
+            <div onclick="showContent('k8s')" class="nav-item" id="nav-k8s"><i class="fas fa-cubes mr-2 text-blue-400"></i>k8s_deploy.yaml</div>
+            <div onclick="showContent('aura')" class="nav-item" id="nav-aura"><i class="fab fa-python mr-2 text-yellow-400"></i>auratwin_engine.py</div>
+            <div onclick="showContent('nifi')" class="nav-item" id="nav-nifi"><i class="fas fa-exchange-alt mr-2 text-orange-400"></i>pkg_automation.sh</div>
+            <div onclick="showContent('other')" class="nav-item" id="nav-other"><i class="fas fa-mobile-alt mr-2 text-purple-400"></i>mobile_apps.log</div>
+        </div>
+        <div class="tux-container p-4">
+            <i class="fab fa-linux text-5xl text-white"></i>
+            <div class="tux-tooltip">I use Arch btw 🐧</div>
+        </div>
+    </aside>
+
+    <main class="glass-panel overflow-hidden">
+        <div class="panel-header">
+            <span id="current-file">bio.md</span>
+            <span class="text-white/30 italic"><span class="lang-en">Read-Only</span><span class="lang-tr hidden-lang">Salt-Okunur</span></span>
+        </div>
         
-        <div class="grid md:grid-cols-2 gap-8">
-            <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 card-hover">
-                <div class="text-sky-400 text-sm font-bold mb-2">Enterprise Deployment</div>
-                <h3 class="text-2xl font-bold mb-4">Kubernetes Product Deployment</h3>
-                <p class="text-slate-400 mb-6">Raynet bünyesinde kurumsal ürünlerin Kubernetes mimarisine deployment süreçlerini yönetiyorum. Dockerization ve CI/CD pipeline optimizasyonları üzerine odaklanıyorum.</p>
-                <div class="flex flex-wrap gap-2">
-                    <span class="bg-slate-900 px-3 py-1 rounded text-xs text-sky-300">Kubernetes</span>
-                    <span class="bg-slate-900 px-3 py-1 rounded text-xs text-sky-300">Docker</span>
-                    <span class="bg-slate-900 px-3 py-1 rounded text-xs text-sky-300">Helm</span>
+        <div class="p-8 overflow-y-auto h-[calc(100%-40px)]">
+            <div id="content-bio" class="content-section">
+                <h2 class="text-3xl font-bold mb-6 italic">
+                    <span class="lang-en">Hello, I'm Ozgur.</span><span class="lang-tr hidden-lang">Merhaba, Ben Ozgur.</span>
+                </h2>
+                <div class="lang-en text-gray-300 space-y-4">
+                    <p>I am a 4th-year Computer Engineering student at Yaşar University.</p>
+                    <p id="typewriter-en" class="typewriter-cursor"></p>
+                    <p class="hidden-typewriter-text-en hidden">Currently working as an IT Consultant at <span class="text-sky-400 font-bold">Raynet</span>, specializing in <span class="text-white font-bold">Linux systems</span> and <span class="text-white font-bold">Kubernetes orchestration</span>. I focus on SRE principles to build reliable, automated infrastructures.</p>
+                </div>
+                <div class="lang-tr hidden-lang text-gray-300 space-y-4">
+                    <p>Yaşar Üniversitesi'nde 4. sınıf Bilgisayar Mühendisliği öğrencisiyim.</p>
+                    <p id="typewriter-tr" class="typewriter-cursor"></p>
+                    <p class="hidden-typewriter-text-tr hidden">Şu anda <span class="text-sky-400 font-bold">Raynet</span> bünyesinde, özellikle <span class="text-white font-bold">Linux sistemleri</span> ve <span class="text-white font-bold">Kubernetes orkestrasyonu</span> üzerine uzmanlaşmış bir IT Danışmanı olarak çalışıyorum. SRE prensipleriyle güvenilir, otomatik altyapılar kurmaya odaklanıyorum.</p>
                 </div>
             </div>
 
-            <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 card-hover">
-                <div class="text-emerald-400 text-sm font-bold mb-2">Observability</div>
-                <h3 class="text-2xl font-bold mb-4">Monitoring & Alerting Stack</h3>
-                <p class="text-slate-400 mb-6">Prometheus ve Grafana kullanarak sistem metriklerinin görselleştirilmesi ve anomali durumlarında otomatik uyarı mekanizmalarının kurulması.</p>
-                <div class="flex flex-wrap gap-2">
-                    <span class="bg-slate-900 px-3 py-1 rounded text-xs text-emerald-300">Prometheus</span>
-                    <span class="bg-slate-900 px-3 py-1 rounded text-xs text-emerald-300">Grafana</span>
-                    <span class="bg-slate-900 px-3 py-1 rounded text-xs text-emerald-300">Linux</span>
-                </div>
+            <div id="content-k8s" class="content-section hidden-lang">
+                <div class="text-blue-400 font-bold mb-4 uppercase tracking-tighter glitch-effect">// Kubernetes & Infrastructure</div>
+                <p class="lang-en text-gray-300">Contributing to the deployment of enterprise products on Kubernetes and setting up observability with Prometheus/Grafana. Automating the chaos.</p>
+                <p class="lang-tr hidden-lang text-gray-300">Kurumsal ürünlerin Kubernetes ortamlarında yayına alınması süreçlerine katkı sağlıyor ve Prometheus/Grafana ile gözlemlenebilirlik yapıları kuruyorum. Kaosu otomatiğe bağlıyorum.</p>
             </div>
 
-            <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 card-hover">
-                <div class="text-purple-400 text-sm font-bold mb-2">Graduation Project</div>
-                <h3 class="text-2xl font-bold mb-4">AuraTwin: Digital Twin System</h3>
-                <p class="text-slate-400 mb-6">Bilişsel ve duygusal yük takibi yapan dijital ikiz sistemi. Backend tarafında veri işleme ve sistem güvenilirliği mimarisini yönetiyorum.</p>
-                <div class="flex flex-wrap gap-2">
-                    <span class="bg-slate-900 px-3 py-1 rounded text-xs text-purple-300">Python</span>
-                    <span class="bg-slate-900 px-3 py-1 rounded text-xs text-purple-300">Data Pipeline</span>
-                    <span class="bg-slate-900 px-3 py-1 rounded text-xs text-purple-300">Cloud</span>
-                </div>
+            <div id="content-aura" class="content-section hidden-lang">
+                <div class="text-yellow-400 font-bold mb-4 uppercase tracking-tighter glitch-effect">// AuraTwin: Graduation Project</div>
+                <p class="lang-en text-gray-300">Developing a digital twin system for cognitive and emotional load monitoring. Leading the backend and reliability architecture.</p>
+                <p class="lang-tr hidden-lang text-gray-300">Bilişsel ve duygusal yük takibi için dijital ikiz sistemi (AuraTwin) geliştiriyorum. Arka uç ve güvenilirlik mimarisinden sorumluyum.</p>
             </div>
 
-            <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 card-hover">
-                <div class="text-orange-400 text-sm font-bold mb-2">Automation</div>
-                <h3 class="text-2xl font-bold mb-4">Linux Package Automation</h3>
-                <p class="text-slate-400 mb-6">Apache NiFi ve Python kullanarak Linux paket bilgilerinin otomatik toplanması ve MySQL/MongoDB veritabanlarına aktarımı (EOL/EOS takibi).</p>
-                <div class="flex flex-wrap gap-2">
-                    <span class="bg-slate-900 px-3 py-1 rounded text-xs text-orange-300">Apache NiFi</span>
-                    <span class="bg-slate-900 px-3 py-1 rounded text-xs text-orange-300">Python</span>
-                    <span class="bg-slate-900 px-3 py-1 rounded text-xs text-orange-300">MySQL</span>
+            <div id="content-nifi" class="content-section hidden-lang">
+                <div class="text-orange-400 font-bold mb-4 uppercase tracking-tighter glitch-effect">// Linux Package Automation</div>
+                <p class="lang-en text-gray-300">Built automated pipelines using Apache NiFi and Python to track Linux package EOL/EOS dates across MySQL and MongoDB.</p>
+                <p class="lang-tr hidden-lang text-gray-300">Linux paketlerinin EOL/EOS tarihlerini MySQL ve MongoDB üzerinden takip etmek için Apache NiFi ve Python ile otomatik iş akışları kurdum.</p>
+            </div>
+
+            <div id="content-other" class="content-section hidden-lang">
+                <div class="text-purple-400 font-bold mb-4 uppercase tracking-tighter glitch-effect">// Apps & Games</div>
+                <p class="lang-en text-gray-300">Developed a mobile attendance app with Flutter and contributed to the "Sensei" game project in Unity.</p>
+                <p class="lang-tr hidden-lang text-gray-300">Flutter ile mobil yoklama uygulaması geliştirdim ve Unity'deki "Sensei" oyun projesine katkıda bulundum.</p>
+            </div>
+        </div>
+    </main>
+
+    <aside class="glass-panel p-4">
+        <div class="text-[10px] text-gray-500 mb-4 uppercase tracking-widest border-b border-white/10 pb-1 italic">
+            <span class="lang-en">Tech Inventory</span><span class="lang-tr hidden-lang">Teknoloji Envanteri</span>
+        </div>
+        <div class="space-y-4 project-card">
+            <div>
+                <p class="text-[9px] text-green-500/50 mb-1 glitch-effect">INFRASTRUCTURE</p>
+                <div class="flex flex-wrap gap-1">
+                    <span class="tech-tag"><i class="fab fa-linux mr-1"></i>Linux</span>
+                    <span class="tech-tag"><i class="fas fa-cubes mr-1"></i>K8s</span>
+                    <span class="tech-tag"><i class="fab fa-docker mr-1"></i>Docker</span>
+                </div>
+            </div>
+            <div>
+                <p class="text-[9px] text-green-500/50 mb-1 glitch-effect">DEVELOPMENT</p>
+                <div class="flex flex-wrap gap-1">
+                    <span class="tech-tag"><i class="fab fa-python mr-1"></i>Python</span>
+                    <span class="tech-tag">C#</span><span class="tech-tag">Flutter</span>
                 </div>
             </div>
         </div>
-    </section>
+    </aside>
 
-    <section id="skills" class="bg-slate-900 py-20 px-6">
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold mb-12">Teknik Yetkinlikler</h2>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                <div class="p-6 bg-slate-800 rounded-xl shadow-lg">
-                    <i class="fab fa-linux text-4xl mb-4 text-white"></i>
-                    <p class="font-semibold">Linux Administration</p>
-                </div>
-                <div class="p-6 bg-slate-800 rounded-xl shadow-lg">
-                    <i class="fab fa-docker text-4xl mb-4 text-sky-400"></i>
-                    <p class="font-semibold">Docker & K8s</p>
-                </div>
-                <div class="p-6 bg-slate-800 rounded-xl shadow-lg">
-                    <i class="fab fa-python text-4xl mb-4 text-yellow-400"></i>
-                    <p class="font-semibold">Python Scripting</p>
-                </div>
-                <div class="p-6 bg-slate-800 rounded-xl shadow-lg">
-                    <i class="fas fa-chart-line text-4xl mb-4 text-orange-400"></i>
-                    <p class="font-semibold">Monitoring (Grafana)</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="py-10 text-center text-slate-500 text-sm">
-        <p>&copy; 2026 Ahmet Özgür Korkmaz. Build with ❤️ & GitHub Pages.</p>
+    <footer class="glass-panel col-span-3 flex items-center px-4 font-mono text-[10px] text-gray-500">
+        <span class="text-green-500 mr-2">[OK]</span>
+        <span class="lang-en">Listening for connections... Target: Paderborn, Germany. Powered by Linux.</span>
+        <span class="lang-tr hidden-lang">Bağlantılar dinleniyor... Hedef: Paderborn, Almanya. Linux ile güçlendirildi.</span>
     </footer>
+</div>
 
+<script>
+    let currentLang = 'en';
+    const beepSound = document.getElementById('beep-sound');
+
+    function toggleLang() {
+        beepSound.play();
+        currentLang = currentLang === 'en' ? 'tr' : 'en';
+        const enElements = document.querySelectorAll('.lang-en');
+        const trElements = document.querySelectorAll('.lang-tr');
+
+        if (currentLang === 'tr') {
+            enElements.forEach(el => el.classList.add('hidden-lang'));
+            trElements.forEach(el => el.classList.remove('hidden-lang'));
+            startTypewriter('tr');
+        } else {
+            enElements.forEach(el => el.classList.remove('hidden-lang'));
+            trElements.forEach(el => el.classList.add('hidden-lang'));
+            startTypewriter('en');
+        }
+    }
+
+    function showContent(id) {
+        beepSound.play();
+        document.querySelectorAll('.content-section').forEach(section => section.classList.add('hidden-lang'));
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        
+        const target = document.getElementById('content-' + id);
+        target.classList.remove('hidden-lang');
+        document.getElementById('nav-' + id).classList.add('active');
+        document.getElementById('current-file').innerText = id + (id === 'bio' ? '.md' : (id === 'aura' ? '.py' : '.yaml'));
+    }
+
+    let typewriterTimeout;
+    function startTypewriter(lang) {
+        clearTimeout(typewriterTimeout);
+        const text = document.querySelector(`.hidden-typewriter-text-${lang}`).innerHTML;
+        const container = document.getElementById(`typewriter-${lang}`);
+        container.innerHTML = '';
+        let i = 0;
+        
+        function type() {
+            if (i < text.length) {
+                container.innerHTML = text.substring(0, i + 1);
+                i++;
+                typewriterTimeout = setTimeout(type, 30);
+            }
+        }
+        type();
+    }
+
+    // Start initial typewriter
+    window.onload = () => startTypewriter('en');
+
+    setInterval(() => {
+        document.getElementById('cpu-load').innerText = Math.floor(Math.random() * 10 + 5) + '%';
+    }, 3000);
+</script>
 </body>
 </html>
