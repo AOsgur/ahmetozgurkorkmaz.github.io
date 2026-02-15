@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500;700&display=swap');
-        body { background-color: #0a0a0c; color: #00ff41; font-family: 'Fira Code', monospace; overflow: hidden; margin: 0; }
+        body { background-color: #0a0a0c; color: #00ff41; font-family: 'Fira Code', monospace; margin: 0; padding: 0; overflow: hidden; }
         
-        /* Desktop Grid */
+        /* Desktop Layout */
         .dashboard-grid { 
             display: grid; 
             grid-template-columns: 280px 1fr 300px; 
@@ -20,43 +20,52 @@
             padding: 10px; 
         }
 
-        /* Responsive Hybrid Logic */
+        /* Responsive UI Logic */
         @media (max-width: 1024px) {
-            .dashboard-grid { display: flex; flex-direction: column; height: 100vh; padding: 5px; gap: 5px; }
-            .sidebar-panel { position: fixed; top: 65px; left: -100%; width: 80%; height: calc(100% - 110px); z-index: 50; transition: 0.3s; }
-            .sidebar-panel.open { left: 5px; }
-            .metrics-panel { display: none; } /* On mobile, we keep it simple */
-            .main-panel { flex-grow: 1; height: 100% !important; }
+            .dashboard-grid { display: flex; flex-direction: column; padding: 5px; gap: 5px; }
+            .sidebar-panel { 
+                position: fixed; top: 0; left: -110%; width: 85%; height: 100%; 
+                z-index: 100; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); background: #0a0a0c; 
+            }
+            .sidebar-panel.open { left: 0; }
+            .metrics-panel { display: none; }
+            .main-panel { height: calc(100vh - 110px) !important; width: 100%; }
+            .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 90; }
+            .mobile-overlay.open { display: block; }
         }
 
-        .glass-panel { background: rgba(20, 20, 25, 0.9); border: 1px solid #1a1a20; border-radius: 4px; position: relative; overflow: hidden; }
+        .glass-panel { background: rgba(20, 20, 25, 0.95); border: 1px solid #1a1a20; border-radius: 4px; overflow: hidden; position: relative; }
         .panel-header { background: #1a1a20; padding: 10px 15px; font-size: 0.75rem; color: #888; display: flex; justify-content: space-between; border-bottom: 1px solid #333; }
-        .nav-item { cursor: pointer; transition: all 0.2s; padding: 10px; border-radius: 3px; font-size: 0.85rem; }
-        .nav-item:hover { background: rgba(0, 255, 65, 0.1); color: white; }
-        .nav-item.active { background: rgba(0, 255, 65, 0.2); color: white; border-left: 3px solid #00ff41; }
+        .nav-item { cursor: pointer; transition: 0.2s; padding: 12px; border-radius: 4px; font-size: 0.85rem; margin-bottom: 4px; display: flex; align-items: center; }
+        .nav-item:hover { background: rgba(0, 255, 65, 0.1); }
+        .nav-item.active { background: rgba(0, 255, 65, 0.2); color: white; border-left: 4px solid #00ff41; }
         .hidden-lang { display: none !important; }
-        .tech-tag { border: 1px solid rgba(0, 255, 65, 0.3); padding: 2px 8px; border-radius: 4px; font-size: 0.7rem; background: rgba(0, 255, 65, 0.05); color: #e2e8f0; }
         .typewriter-cursor { border-right: 2px solid #00ff41; animation: blink 1s step-end infinite; }
         @keyframes blink { 50% { border-color: transparent; } }
-        
-        .mobile-menu-btn { display: none; }
-        @media (max-width: 1024px) { .mobile-menu-btn { display: block; } }
+
+        /* Tux Penguin Branding */
+        .tux-container { margin-top: auto; padding: 20px; color: rgba(0, 255, 65, 0.3); transition: 0.3s; text-align: center; }
+        .tux-container:hover { color: #fff; transform: scale(1.1); }
+        .tux-tooltip { opacity: 0; transition: 0.3s; position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); background: #00ff41; color: #000; padding: 4px 8px; border-radius: 4px; font-size: 0.6rem; font-weight: bold; white-space: nowrap; pointer-events: none; }
+        .tux-container:hover .tux-tooltip { opacity: 1; }
     </style>
 </head>
 <body>
 
+<div id="overlay" class="mobile-overlay" onclick="toggleSidebar()"></div>
+
 <div class="dashboard-grid">
     <header class="glass-panel col-span-3 flex items-center justify-between px-4 md:px-6">
-        <div class="flex items-center space-x-3">
-            <button onclick="toggleSidebar()" class="mobile-menu-btn text-green-500 text-xl"><i class="fas fa-bars"></i></button>
-            <span class="text-white font-bold tracking-tighter hidden md:block">OOK_ROOT_v4.2</span>
-            <span class="text-[10px] bg-green-900/30 text-green-500 px-2 py-0.5 rounded border border-green-500/50 uppercase">
-                <span class="lang-en">System: Online</span><span class="lang-tr hidden-lang">Sistem: Aktif</span>
-            </span>
+        <div class="flex items-center space-x-4">
+            <button onclick="toggleSidebar()" class="lg:hidden text-green-500 text-xl p-2"><i class="fas fa-bars"></i></button>
+            <span class="text-white font-bold tracking-tighter hidden md:block">OOK_SYSTEM_v5.2</span>
+            <div class="text-[9px] md:text-[10px] bg-green-900/20 text-green-500 px-2 py-1 rounded border border-green-500/40 uppercase font-bold">
+                <span class="lang-en">Status: Online</span><span class="lang-tr hidden-lang">Durum: Aktif</span>
+            </div>
         </div>
-        <div class="flex items-center space-x-6 text-xs text-green-500">
-            <div class="hidden sm:block"><i class="fas fa-microchip mr-2"></i>CPU: <span id="cpu-load">12%</span></div>
-            <button onclick="toggleLang()" class="bg-green-500/10 border border-green-500/50 px-4 py-1 hover:bg-green-500/20 rounded transition font-bold">
+        <div class="flex items-center space-x-4">
+            <div class="hidden sm:block text-[10px] text-green-500/70"><i class="fas fa-microchip mr-1"></i>LOAD: <span id="cpu-load">10%</span></div>
+            <button onclick="toggleLang()" class="bg-green-500/10 border border-green-500/40 px-4 py-1 hover:bg-green-500/20 rounded text-[10px] font-bold text-green-400 transition">
                 <span class="lang-en">TR</span><span class="lang-tr hidden-lang">EN</span>
             </button>
         </div>
@@ -64,105 +73,122 @@
 
     <aside id="sidebar" class="glass-panel sidebar-panel flex flex-col">
         <div class="panel-header">
-            <span><span class="lang-en">EXPLORER</span><span class="lang-tr hidden-lang">GEZGİN</span></span>
-            <i class="fas fa-folder-tree"></i>
+            <span><span class="lang-en">FS_EXPLORER</span><span class="lang-tr hidden-lang">DOSYA_GEZGİNİ</span></span>
+            <button onclick="toggleSidebar()" class="lg:hidden text-gray-500"><i class="fas fa-times"></i></button>
         </div>
-        <div class="p-4 space-y-2 text-sm flex-grow">
-            <div onclick="showContent('bio')" class="nav-item active" id="nav-bio"><i class="fas fa-terminal mr-2"></i>ozgur.sh</div>
-            <div onclick="showContent('k8s')" class="nav-item" id="nav-k8s"><i class="fas fa-cubes mr-2 text-blue-400"></i>infra_k8s.yaml</div>
-            <div onclick="showContent('aura')" class="nav-item" id="nav-aura"><i class="fab fa-python mr-2 text-yellow-400"></i>auratwin_core.py</div>
-            <div onclick="showContent('nifi')" class="nav-item" id="nav-nifi"><i class="fas fa-exchange-alt mr-2 text-orange-400"></i>pkg_automation.sh</div>
-            <div onclick="showContent('other')" class="nav-item" id="nav-other"><i class="fas fa-code-branch mr-2 text-purple-400"></i>projects.log</div>
-        </div>
-        <div class="p-4 text-center opacity-30"><i class="fab fa-linux text-5xl"></i></div>
-    </aside>
-
-    <main class="glass-panel main-panel overflow-hidden">
-        <div class="panel-header">
-            <span id="current-file">ozgur.sh</span>
-            <span class="text-white/30 italic">bash-v5.0</span>
+        <div class="p-4 space-y-1 flex-grow overflow-y-auto">
+            <div onclick="showContent('bio')" class="nav-item active" id="nav-bio"><i class="fas fa-terminal mr-3"></i>ozgur.sh</div>
+            <div onclick="showContent('k8s')" class="nav-item" id="nav-k8s"><i class="fas fa-cubes mr-3 text-blue-400"></i>infra_k8s.yaml</div>
+            <div onclick="showContent('aura')" class="nav-item" id="nav-aura"><i class="fab fa-python mr-3 text-yellow-400"></i>auratwin_core.py</div>
+            <div onclick="showContent('nifi')" class="nav-item" id="nav-nifi"><i class="fas fa-exchange-alt mr-3 text-orange-400"></i>pkg_automation.sh</div>
+            <div onclick="showContent('other')" class="nav-item" id="nav-other"><i class="fas fa-code-branch mr-3 text-purple-400"></i>side_projects.log</div>
         </div>
         
-        <div class="p-6 md:p-10 overflow-y-auto h-[calc(100%-40px)]">
+        <div class="tux-container">
+            <div class="tux-tooltip">Linux Enthusiast 🐧</div>
+            <i class="fab fa-linux text-6xl"></i>
+        </div>
+
+        <div class="p-6 border-t border-white/5 bg-black/40 lg:hidden">
+            <div class="flex justify-around text-2xl text-white">
+                <a href="https://github.com/AOsgur" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/aozgurkorkmaz/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="mailto:korkmazahmetozgur@gmail.com"><i class="fas fa-envelope"></i></a>
+            </div>
+        </div>
+    </aside>
+
+    <main class="glass-panel main-panel">
+        <div class="panel-header">
+            <span id="current-file">ozgur.sh</span>
+            <span class="text-white/30 italic">bash_v5.0</span>
+        </div>
+        <div class="p-6 md:p-10 overflow-y-auto h-[calc(100%-40px)] leading-relaxed">
+            
             <div id="content-bio" class="content-section">
-                <h2 class="text-3xl font-bold mb-6 italic">> <span class="lang-en">Hello, I'm Ozgur.</span><span class="lang-tr hidden-lang">Merhaba, Ben Ozgur.</span></h2>
-                <div class="lang-en text-gray-300 space-y-4">
-                    <p>4th-year Computer Engineering student at Yaşar University.</p>
-                    <p id="typewriter-bio-en" class="typewriter-cursor"></p>
-                    <p class="hidden-text-bio-en hidden">As an IT Consultant at <span class="text-sky-400 font-bold">Raynet</span>, I specialize in <span class="text-white font-bold">Linux systems</span> and <span class="text-white font-bold">Kubernetes orchestration</span>. Focusing on SRE principles to build reliable infrastructures.</p>
-                </div>
-                <div class="lang-tr hidden-lang text-gray-300 space-y-4">
-                    <p>Yaşar Üniversitesi'nde 4. sınıf Bilgisayar Mühendisliği öğrencisiyim.</p>
-                    <p id="typewriter-bio-tr" class="typewriter-cursor"></p>
-                    <p class="hidden-text-bio-tr hidden"><span class="text-sky-400 font-bold">Raynet</span> bünyesinde, özellikle <span class="text-white font-bold">Linux sistemleri</span> ve <span class="text-white font-bold">Kubernetes orkestrasyonu</span> üzerine yoğunlaşmış bir IT Danışmanı olarak çalışıyorum. Sistem güvenilirliği ana odağım.</p>
+                <h2 class="text-2xl md:text-3xl font-bold mb-6 italic">> <span class="lang-en">Hello, I'm Ozgur.</span><span class="lang-tr hidden-lang">Merhaba, Ben Ozgur.</span></h2>
+                <div class="text-gray-300 text-sm md:text-base space-y-4">
+                    <p class="lang-en">4th-year Computer Engineering student at Yaşar University.</p>
+                    <p class="lang-tr hidden-lang">Yaşar Üniversitesi'nde 4. sınıf Bilgisayar Mühendisliği öğrencisiyim.</p>
+                    <p id="typewriter-bio-en" class="lang-en typewriter-cursor"></p>
+                    <p id="typewriter-bio-tr" class="lang-tr hidden-lang typewriter-cursor"></p>
+                    <div class="hidden">
+                        <span class="hidden-text-bio-en">As an IT Consultant at <span class="text-sky-400 font-bold">Raynet</span>, I specialize in <span class="text-white font-bold">Linux systems</span> and <span class="text-white font-bold">Kubernetes orchestration</span>. Focusing on SRE principles to build reliable infrastructures.</span>
+                        <span class="hidden-text-bio-tr"><span class="text-sky-400 font-bold">Raynet</span> bünyesinde, özellikle <span class="text-white font-bold">Linux sistemleri</span> ve <span class="text-white font-bold">Kubernetes orkestrasyonu</span> üzerine yoğunlaşmış bir IT Danışmanı olarak çalışıyorum. Amacım güvenilir altyapılar inşa etmek.</span>
+                    </div>
                 </div>
             </div>
 
             <div id="content-k8s" class="content-section hidden-lang">
-                <div class="text-blue-400 font-bold mb-4 uppercase tracking-tighter">> Kubernetes & Infrastructure</div>
-                <div class="lang-en text-gray-300 space-y-4">
-                    <p id="typewriter-k8s-en" class="typewriter-cursor"></p>
-                    <p class="hidden-text-k8s-en hidden">Managing deployment workflows for enterprise products on <span class="text-white">Kubernetes clusters</span>. Implementing observability stacks with Prometheus and Grafana.</p>
-                </div>
-                <div class="lang-tr hidden-lang text-gray-300 space-y-4">
-                    <p id="typewriter-k8s-tr" class="typewriter-cursor"></p>
-                    <p class="hidden-text-k8s-tr hidden">Kurumsal ürünlerin <span class="text-white">Kubernetes kümeleri</span> üzerinde deployment süreçlerine katkı sağlıyor, Prometheus ve Grafana ile izleme yapıları kuruyorum.</p>
+                <h2 class="text-2xl font-bold mb-6 text-blue-400 italic">> Kubernetes & Infrastructure</h2>
+                <div class="text-gray-300 text-sm md:text-base space-y-4">
+                    <p id="typewriter-k8s-en" class="lang-en typewriter-cursor"></p>
+                    <p id="typewriter-k8s-tr" class="lang-tr hidden-lang typewriter-cursor"></p>
+                    <div class="hidden">
+                        <span class="hidden-text-k8s-en">Managing deployment workflows for enterprise products on <span class="text-white">Kubernetes clusters</span>. Specialized in setting up full-stack observability with <span class="text-white">Prometheus and Grafana</span>.</span>
+                        <span class="hidden-text-k8s-tr">Kurumsal ürünlerin <span class="text-white">Kubernetes kümeleri</span> üzerinde yayına alınma süreçlerine katkı sağlıyorum. <span class="text-white">Prometheus ve Grafana</span> ile uçtan uca gözlemlenebilirlik yapıları kuruyorum.</span>
+                    </div>
                 </div>
             </div>
 
             <div id="content-aura" class="content-section hidden-lang">
-                <div class="text-yellow-400 font-bold mb-4 uppercase tracking-tighter">> AuraTwin: Graduation Project</div>
-                <div class="lang-en text-gray-300 space-y-4">
-                    <p id="typewriter-aura-en" class="typewriter-cursor"></p>
-                    <p class="hidden-text-aura-en hidden">Developing a digital twin system for cognitive load monitoring at Yaşar University. Leading backend architecture and reliability engineering.</p>
-                </div>
-                <div class="lang-tr hidden-lang text-gray-300 space-y-4">
-                    <p id="typewriter-aura-tr" class="typewriter-cursor"></p>
-                    <p class="hidden-text-aura-tr hidden">Bilişsel yük takibi için bir dijital ikiz sistemi geliştiriyorum. Arka uç mimarisi ve sistem güvenilirliği üzerine çalışıyorum.</p>
+                <h2 class="text-2xl font-bold mb-6 text-yellow-400 italic">> AuraTwin Core</h2>
+                <div class="text-gray-300 text-sm md:text-base space-y-4">
+                    <p id="typewriter-aura-en" class="lang-en typewriter-cursor"></p>
+                    <p id="typewriter-aura-tr" class="lang-tr hidden-lang typewriter-cursor"></p>
+                    <div class="hidden">
+                        <span class="hidden-text-aura-en">Developing a <span class="text-white">Digital Twin system</span> for monitoring cognitive and emotional load. Leading the backend development and ensuring system reliability for real-time data processing.</span>
+                        <span class="hidden-text-aura-tr">Bilişsel ve duygusal yükü izlemek için bir <span class="text-white">Dijital İkiz sistemi</span> (AuraTwin) geliştiriyorum. Arka uç geliştirmesine liderlik ediyor ve gerçek zamanlı veri işleme için sistem güvenilirliğini sağlıyorum.</span>
+                    </div>
                 </div>
             </div>
 
             <div id="content-nifi" class="content-section hidden-lang">
-                <div class="text-orange-400 font-bold mb-4 uppercase tracking-tighter">> Automation & Data Pipelines</div>
-                <div class="lang-en text-gray-300 space-y-4">
-                    <p id="typewriter-nifi-en" class="typewriter-cursor"></p>
-                    <p class="hidden-text-nifi-en hidden">Built automated pipelines using <span class="text-white">Apache NiFi</span> and Python to track Linux package EOL/EOS dates across MySQL and MongoDB.</p>
-                </div>
-                <div class="lang-tr hidden-lang text-gray-300 space-y-4">
-                    <p id="typewriter-nifi-tr" class="typewriter-cursor"></p>
-                    <p class="hidden-text-nifi-tr hidden">Linux paketlerinin EOL/EOS tarihlerini MySQL ve MongoDB üzerinden takip etmek için Apache NiFi ve Python ile otomasyonlar kurdum.</p>
+                <h2 class="text-2xl font-bold mb-6 text-orange-400 italic">> Automation Pipelines</h2>
+                <div class="text-gray-300 text-sm md:text-base space-y-4">
+                    <p id="typewriter-nifi-en" class="lang-en typewriter-cursor"></p>
+                    <p id="typewriter-nifi-tr" class="lang-tr hidden-lang typewriter-cursor"></p>
+                    <div class="hidden">
+                        <span class="hidden-text-nifi-en">Built automated pipelines using <span class="text-white">Apache NiFi</span> and Python to track Linux package EOL/EOS dates across MySQL and MongoDB.</span>
+                        <span class="hidden-text-nifi-tr">Linux paketlerinin EOL/EOS tarihlerini MySQL ve MongoDB üzerinden takip etmek için <span class="text-white">Apache NiFi</span> ve Python ile otomatik iş akışları kurdum.</span>
+                    </div>
                 </div>
             </div>
 
             <div id="content-other" class="content-section hidden-lang">
-                <div class="text-purple-400 font-bold mb-4 uppercase tracking-tighter">> side_projects.log</div>
-                <div class="lang-en text-gray-300 space-y-4">
-                    <ul class="list-disc ml-4">
-                        <li>Basketball Academy App: Mobile attendance with Flutter & Firebase.</li>
-                        <li>Sensei: Samurai-themed game project in Unity.</li>
-                    </ul>
-                </div>
-                <div class="lang-tr hidden-lang text-gray-300 space-y-4">
-                    <ul class="list-disc ml-4">
-                        <li>Basketbol Akademisi Uygulaması: Flutter ve Firebase ile yoklama sistemi.</li>
-                        <li>Sensei: Unity ile geliştirilen samuray temalı oyun projesi.</li>
-                    </ul>
+                <h2 class="text-2xl font-bold mb-6 text-purple-400 italic">> side_projects.log</h2>
+                <div class="text-gray-300 text-sm md:text-base space-y-6">
+                    <p id="typewriter-other-en" class="lang-en typewriter-cursor"></p>
+                    <p id="typewriter-other-tr" class="lang-tr hidden-lang typewriter-cursor"></p>
+                    <div class="hidden">
+                        <span class="hidden-text-other-en">
+                            - <span class="text-white font-bold">Basketball Academy App:</span> Developed a mobile attendance system using Flutter and Firebase.<br>
+                            - <span class="text-white font-bold">Sensei:</span> Contributed to a Samurai-themed game development project using Unity.
+                        </span>
+                        <span class="hidden-text-other-tr">
+                            - <span class="text-white font-bold">Basketbol Akademisi Uygulaması:</span> Flutter ve Firebase kullanarak mobil yoklama sistemi geliştirdim.<br>
+                            - <span class="text-white font-bold">Sensei:</span> Unity kullanarak geliştirilen samuray temalı bir oyun projesine katkıda bulundum.
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <aside class="glass-panel metrics-panel p-4 flex flex-col justify-between">
-        <div class="space-y-6">
-            <div class="text-[10px] text-gray-500 mb-2 uppercase tracking-widest border-b border-white/10 pb-1 italic">Tech Stack</div>
+    <aside class="glass-panel metrics-panel p-6 flex flex-col justify-between">
+        <div class="space-y-8">
+            <div class="text-[10px] text-gray-500 mb-2 uppercase tracking-widest border-b border-white/10 pb-1 italic">Stack_Enventory</div>
             <div class="flex flex-wrap gap-2">
                 <span class="tech-tag">Linux</span><span class="tech-tag">K8s</span><span class="tech-tag">Docker</span>
                 <span class="tech-tag">Python</span><span class="tech-tag">Grafana</span><span class="tech-tag">NiFi</span>
+                <span class="tech-tag">Flutter</span><span class="tech-tag">MySQL</span><span class="tech-tag">MongoDB</span>
             </div>
         </div>
-        <div class="bg-green-500/5 border border-green-500/20 p-4 rounded">
-            <div class="text-[9px] text-green-500 mb-4 font-bold uppercase tracking-widest">Connections</div>
-            <div class="flex justify-around text-2xl text-white">
+        <div class="space-y-4">
+            <div class="bg-green-500/5 border border-green-500/20 p-4 rounded text-center">
+                <span class="text-[9px] text-green-500 font-bold tracking-widest uppercase">Target: Paderborn_DE</span>
+            </div>
+            <div class="flex justify-around text-2xl text-white pt-4">
                 <a href="https://github.com/AOsgur" target="_blank" class="hover:text-green-500 transition"><i class="fab fa-github"></i></a>
                 <a href="https://www.linkedin.com/in/aozgurkorkmaz/" target="_blank" class="hover:text-green-500 transition"><i class="fab fa-linkedin"></i></a>
                 <a href="mailto:korkmazahmetozgur@gmail.com" class="hover:text-green-500 transition"><i class="fas fa-envelope"></i></a>
@@ -172,16 +198,18 @@
 
     <footer class="glass-panel col-span-3 flex items-center px-4 font-mono text-[9px] text-gray-500 overflow-hidden">
         <span class="text-green-500 mr-2">[OK]</span>
-        <marquee scrollamount="3">Mission: Paderborn, Germany. Current Status: Computer Engineering student & SRE Enthusiast. User: Ozgur.</marquee>
+        <marquee scrollamount="3">Current Mission: Relocate to Paderborn, Germany. | Status: Computer Engineering student & SRE Enthusiast. | User: Ozgur.</marquee>
     </footer>
 </div>
 
 <script>
     let currentLang = 'en';
     let currentId = 'bio';
+    let typewriterTimeout;
 
     function toggleSidebar() {
         document.getElementById('sidebar').classList.toggle('open');
+        document.getElementById('overlay').classList.toggle('open');
     }
 
     function toggleLang() {
@@ -195,28 +223,44 @@
         currentId = id;
         document.querySelectorAll('.content-section').forEach(section => section.classList.add('hidden-lang'));
         document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-        document.getElementById('content-' + id).classList.remove('hidden-lang');
-        document.getElementById('nav-' + id).classList.add('active');
-        document.getElementById('current-file').innerText = (id === 'bio' ? 'ozgur' : id) + (id === 'k8s' ? '.yaml' : (id === 'aura' ? '.py' : '.sh'));
         
-        if (window.innerWidth <= 1024) toggleSidebar();
+        const target = document.getElementById('content-' + id);
+        target.classList.remove('hidden-lang');
+        document.getElementById('nav-' + id).classList.add('active');
+        
+        const ext = { bio: '.sh', k8s: '.yaml', aura: '.py', nifi: '.sh', other: '.log' };
+        document.getElementById('current-file').innerText = (id === 'bio' ? 'ozgur' : id) + (ext[id] || '.log');
+        
+        if (window.innerWidth <= 1024) {
+            const sidebar = document.getElementById('sidebar');
+            if(sidebar.classList.contains('open')) toggleSidebar();
+        }
         startTypewriter(id, currentLang);
     }
 
-    let typewriterTimeout;
     function startTypewriter(id, lang) {
         clearTimeout(typewriterTimeout);
         const source = document.querySelector(`.hidden-text-${id}-${lang}`);
         const target = document.getElementById(`typewriter-${id}-${lang}`);
+        
         if (!source || !target) return;
+        
         target.innerHTML = '';
-        const fullText = source.innerHTML;
+        const fullText = source.innerHTML.trim();
         let i = 0;
+        
         function type() {
             if (i < fullText.length) {
-                target.innerHTML = fullText.substring(0, i + 1);
-                i++;
-                typewriterTimeout = setTimeout(type, 15);
+                // Handle HTML tags properly
+                if (fullText.charAt(i) === '<') {
+                    const tagEnd = fullText.indexOf('>', i);
+                    target.innerHTML += fullText.substring(i, tagEnd + 1);
+                    i = tagEnd + 1;
+                } else {
+                    target.innerHTML += fullText.charAt(i);
+                    i++;
+                }
+                typewriterTimeout = setTimeout(type, 10);
             }
         }
         type();
